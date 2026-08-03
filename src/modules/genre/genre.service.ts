@@ -40,8 +40,41 @@ const getSingleGenreFromDB = async (id: string) => {
   return result;
 };
 
+// Update existing Genre
+const updateGenreIntoDB = async (id: string, payload: { name?: string }) => {
+  const slugify = (text: string) => {
+    return text
+      .toLowerCase()
+      .replace(/ /g, "-")
+      .replace(/[^\w-]+/g, "");
+  };
+
+  const isGenreExists = await prisma.genre.findUnique({
+    where: { id },
+  });
+
+  if (!isGenreExists) {
+    throw new Error("Genre not found!");
+  }
+
+  const updateData: { name?: string; slug?: string } = {};
+
+  if (payload.name) {
+    updateData.name = payload.name;
+    updateData.slug = slugify(payload.name);
+  }
+
+  const result = await prisma.genre.update({
+    where: { id },
+    data: updateData,
+  });
+
+  return result;
+};
+
 export const GenreService = {
   createGenreIntoDB,
   getAllGenresFromDB,
   getSingleGenreFromDB,
+  updateGenreIntoDB,
 };

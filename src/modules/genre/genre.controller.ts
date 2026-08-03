@@ -66,8 +66,37 @@ const getSingleGenre = async (req: Request, res: Response) => {
   }
 };
 
+// Update existing Genre (Controller)
+const updateGenre = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    // চেক করা বডিতে কোনো ডাটা দেওয়া হয়েছে কি না
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No update data provided!",
+      });
+    }
+
+    const result = await GenreService.updateGenreIntoDB(id as string, req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "Genre updated successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Failed to update genre",
+    });
+  }
+};
+
 export const GenreController = {
   createGenre,
   getAllGenres,
   getSingleGenre,
+  updateGenre,
 };

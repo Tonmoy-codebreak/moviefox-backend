@@ -18,4 +18,7 @@ router.get("/", GenreController.getAllGenres);
 // Get Single Genre details (including media that has the genre)
 router.get("/:id", GenreController.getSingleGenre);
 
+// Update Genre Route
+router.patch("/:id", GenreController.updateGenre);
+
 export default router;
