@@ -53,3 +53,18 @@ export const getAllMediaFromDB = async (query: Record<string, any>) => {
     data: result,
   };
 };
+
+// Get single media details from Db
+export const getSingleMediaFromDB = async (id: string) => {
+  const result = await prisma.media.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  if (!result) {
+    throw new Error("Media not found!");
+  }
+
+  return result;
+};
