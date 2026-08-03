@@ -1,5 +1,10 @@
 import { Router, type IRouter } from "express";
-import { createMedia, getAllMedia, getSingleMedia } from "./media.controller";
+import {
+  createMedia,
+  getAllMedia,
+  getSingleMedia,
+  updateMedia,
+} from "./media.controller";
 
 import { validateRequest } from "../../middlewares/validaterequest";
 import { createMediaValidationSchema } from "./media.validation";
@@ -16,7 +21,7 @@ router.get("/", getAllMedia);
 router.get("/:id", getSingleMedia);
 
 // Update a media
-// router.patch("/:id");
+router.patch("/:id", updateMedia);
 
 // Delete a media
 // router.delete("/:id");

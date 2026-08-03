@@ -3,6 +3,7 @@ import {
   createMediaIntoDB,
   getAllMediaFromDB,
   getSingleMediaFromDB,
+  updateMediaIntoDB,
 } from "./media.service";
 
 // Create new media in database (Controller)
@@ -58,6 +59,27 @@ export const getSingleMedia = async (req: Request, res: Response) => {
     return res.status(404).json({
       success: false,
       message: error.message || "Media not found!",
+    });
+  }
+};
+
+//Update Media details (Controller)
+export const updateMedia = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const payload = req.body;
+
+    const result = await updateMediaIntoDB(id as string, payload);
+
+    return res.status(200).json({
+      success: true,
+      message: "Media updated successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    return res.status(404).json({
+      success: false,
+      message: error.message || "Failed to update media!",
     });
   }
 };

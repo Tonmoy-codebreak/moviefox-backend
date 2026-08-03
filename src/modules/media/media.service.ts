@@ -68,3 +68,21 @@ export const getSingleMediaFromDB = async (id: string) => {
 
   return result;
 };
+
+//Update Media details
+export const updateMediaIntoDB = async (id: string, payload: Partial<any>) => {
+  const isExist = await prisma.media.findUnique({
+    where: { id },
+  });
+
+  if (!isExist) {
+    throw new Error("Media not found to update!");
+  }
+
+  const result = await prisma.media.update({
+    where: { id },
+    data: payload,
+  });
+
+  return result;
+};
