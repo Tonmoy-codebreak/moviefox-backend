@@ -107,3 +107,21 @@ export const softDeleteMediaFromDB = async (id: string) => {
 
   return result;
 };
+
+// Restore soft deleted media
+export const restoreMediaFromDB = async (id: string) => {
+  const isExist = await prisma.media.findUnique({
+    where: { id },
+  });
+
+  if (!isExist) {
+    throw new Error("Media not found to restore!");
+  }
+
+  const result = await prisma.media.update({
+    where: { id },
+    data: { deletedAt: null },
+  });
+
+  return result;
+};
