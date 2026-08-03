@@ -9,7 +9,7 @@ import {
   updateMedia,
 } from "./media.controller";
 
-import { validateRequest } from "../../middlewares/validaterequest";
+import { validateRequest } from "../../middlewares/validateRequest";
 import { createMediaValidationSchema } from "./media.validation";
 
 const router: IRouter = Router();
