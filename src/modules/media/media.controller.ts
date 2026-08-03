@@ -3,6 +3,7 @@ import {
   createMediaIntoDB,
   getAllMediaFromDB,
   getSingleMediaFromDB,
+  softDeleteMediaFromDB,
   updateMediaIntoDB,
 } from "./media.service";
 
@@ -80,6 +81,25 @@ export const updateMedia = async (req: Request, res: Response) => {
     return res.status(404).json({
       success: false,
       message: error.message || "Failed to update media!",
+    });
+  }
+};
+
+// Soft Delete Media (adding Deleted at timestamp) (Controller)
+export const softDeleteMedia = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await softDeleteMediaFromDB(id as string);
+
+    return res.status(200).json({
+      success: true,
+      message: "Media moved to recycle bin successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    return res.status(404).json({
+      success: false,
+      message: error.message || "Failed to delete media!",
     });
   }
 };

@@ -26,6 +26,9 @@ export const getAllMediaFromDB = async (query: Record<string, any>) => {
     };
   }
 
+  // Only media with no deleted At record will show
+  whereConditions.deletedAt = null;
+
   // dynamic sorting
   const sortBy = query.sortBy || "createdAt";
   const sortOrder = query.sortOrder || "desc";
@@ -82,6 +85,24 @@ export const updateMediaIntoDB = async (id: string, payload: Partial<any>) => {
   const result = await prisma.media.update({
     where: { id },
     data: payload,
+  });
+
+  return result;
+};
+
+// Soft Delete Media (adding Deleted at timestamp)
+export const softDeleteMediaFromDB = async (id: string) => {
+  const isExist = await prisma.media.findUnique({
+    where: { id },
+  });
+
+  if (!isExist) {
+    throw new Error("Media not found to delete!");
+  }
+
+  const result = await prisma.media.update({
+    where: { id },
+    data: { deletedAt: new Date() },
   });
 
   return result;

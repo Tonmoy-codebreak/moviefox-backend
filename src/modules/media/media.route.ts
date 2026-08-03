@@ -3,6 +3,7 @@ import {
   createMedia,
   getAllMedia,
   getSingleMedia,
+  softDeleteMedia,
   updateMedia,
 } from "./media.controller";
 
@@ -23,7 +24,7 @@ router.get("/:id", getSingleMedia);
 // Update a media
 router.patch("/:id", updateMedia);
 
-// Delete a media
-// router.delete("/:id");
+// Soft Delete a media
+router.delete("/:id", softDeleteMedia);
 
 export default router;
