@@ -6,6 +6,6 @@ const router: IRouter = Router();
 
 router.post("/register", registerUser);
 router.post("/login", login);
-router.get("/profile", authMiddleware, getUserProfile);
+router.get("/profile", authMiddleware("USER", "ADMIN"), getUserProfile);
 
 export default router;
