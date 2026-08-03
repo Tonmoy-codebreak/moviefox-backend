@@ -3,6 +3,7 @@ import {
   createMediaIntoDB,
   getAllMediaFromDB,
   getSingleMediaFromDB,
+  permanentDeleteMediaFromDB,
   restoreMediaFromDB,
   softDeleteMediaFromDB,
   updateMediaIntoDB,
@@ -120,6 +121,25 @@ export const restoreMedia = async (req: Request, res: Response) => {
     return res.status(404).json({
       success: false,
       message: error.message || "Failed to restore media!",
+    });
+  }
+};
+
+// Permanent Delete a media from soft deleted list (Controller)
+export const permanentDeleteMedia = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await permanentDeleteMediaFromDB(id as string);
+
+    return res.status(200).json({
+      success: true,
+      message: "Media deleted permanently from database!",
+      data: result,
+    });
+  } catch (error: any) {
+    return res.status(400).json({
+      success: false,
+      message: error.message || "Failed to delete media permanently!",
     });
   }
 };

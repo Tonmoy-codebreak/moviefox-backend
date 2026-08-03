@@ -3,6 +3,7 @@ import {
   createMedia,
   getAllMedia,
   getSingleMedia,
+  permanentDeleteMedia,
   restoreMedia,
   softDeleteMedia,
   updateMedia,
@@ -30,5 +31,8 @@ router.delete("/:id", softDeleteMedia);
 
 // Restore soft deleted media
 router.patch("/:id/restore", restoreMedia);
+
+// Permanently delete a media from soft deleted list
+router.delete("/hard-delete/:id", permanentDeleteMedia);
 
 export default router;

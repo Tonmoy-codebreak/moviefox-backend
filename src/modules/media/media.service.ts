@@ -125,3 +125,26 @@ export const restoreMediaFromDB = async (id: string) => {
 
   return result;
 };
+
+// Permanent Delete a media from soft deleted list
+export const permanentDeleteMediaFromDB = async (id: string) => {
+  const isExist = await prisma.media.findUnique({
+    where: { id },
+  });
+
+  if (!isExist) {
+    throw new Error("Media not found!");
+  }
+
+  if (isExist.deletedAt === null) {
+    throw new Error(
+      "You can only permanently delete media that is in the recycle bin (Soft Deleted first)!",
+    );
+  }
+
+  const result = await prisma.media.delete({
+    where: { id },
+  });
+
+  return result;
+};
