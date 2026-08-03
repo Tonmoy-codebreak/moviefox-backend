@@ -21,4 +21,7 @@ router.get("/:id", GenreController.getSingleGenre);
 // Update Genre Route
 router.patch("/:id", GenreController.updateGenre);
 
+// Delete Genre Route
+router.delete("/:id", GenreController.deleteGenre);
+
 export default router;

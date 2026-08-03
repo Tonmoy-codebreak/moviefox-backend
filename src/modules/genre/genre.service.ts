@@ -72,9 +72,27 @@ const updateGenreIntoDB = async (id: string, payload: { name?: string }) => {
   return result;
 };
 
+// Permanent delete existing Genre
+const deleteGenreFromDB = async (id: string) => {
+  const isGenreExists = await prisma.genre.findUnique({
+    where: { id },
+  });
+
+  if (!isGenreExists) {
+    throw new Error("Genre not found!");
+  }
+
+  const result = await prisma.genre.delete({
+    where: { id },
+  });
+
+  return result;
+};
+
 export const GenreService = {
   createGenreIntoDB,
   getAllGenresFromDB,
   getSingleGenreFromDB,
   updateGenreIntoDB,
+  deleteGenreFromDB,
 };

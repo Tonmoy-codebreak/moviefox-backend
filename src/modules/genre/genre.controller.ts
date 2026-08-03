@@ -94,9 +94,29 @@ const updateGenre = async (req: Request, res: Response) => {
   }
 };
 
+// Permanent delete existing Genre (Controller)
+const deleteGenre = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await GenreService.deleteGenreFromDB(id as string);
+
+    res.status(200).json({
+      success: true,
+      message: "Genre deleted successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Failed to delete genre",
+    });
+  }
+};
+
 export const GenreController = {
   createGenre,
   getAllGenres,
   getSingleGenre,
   updateGenre,
+  deleteGenre,
 };
