@@ -71,3 +71,23 @@ export const loginUser = async (payload: {
     token,
   };
 };
+
+// Searching specific user
+export const getUserProfileService = async (userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      createdAt: true,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found!");
+  }
+
+  return user;
+};

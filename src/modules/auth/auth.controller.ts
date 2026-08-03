@@ -1,5 +1,9 @@
 import type { Request, Response } from "express";
-import { loginUser, registerUserService } from "./auth.service.js";
+import {
+  getUserProfileService,
+  loginUser,
+  registerUserService,
+} from "./auth.service.js";
 
 // Register controller
 export const registerUser = async (req: Request, res: Response) => {
@@ -19,7 +23,6 @@ export const registerUser = async (req: Request, res: Response) => {
 };
 
 // Log In controller
-// Login Controller
 export const login = async (req: Request, res: Response) => {
   try {
     // ১. req.body থেকে ইমেইল ও পাসওয়ার্ড রিসিভ করে সার্ভিসে পাস করা হচ্ছে
@@ -36,6 +39,25 @@ export const login = async (req: Request, res: Response) => {
     res.status(400).json({
       success: false,
       error: error.message || "Invalid credentials!",
+    });
+  }
+};
+
+// Searching specific user profile controller
+export const getUserProfile = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.userId; // মিডলওয়্যার থেকে ইউজার আইডি পাওয়া যাচ্ছে
+    const result = await getUserProfileService(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "User profile fetched successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      error: error.message || "Something went wrong!",
     });
   }
 };

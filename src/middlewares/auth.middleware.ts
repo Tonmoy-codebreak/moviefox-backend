@@ -7,7 +7,6 @@ export const authMiddleware = (
   next: NextFunction,
 ) => {
   try {
-    // ১. রিকোয়েস্টের headers থেকে Authorization টোকেন নেওয়া
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -17,17 +16,16 @@ export const authMiddleware = (
       });
     }
 
-    // ২. "Bearer <token>" থেকে শুধু টোকেন অংশটুকু আলাদা করা
+    // Separating Bearer and the token
     const token = authHeader.split(" ")[1]!;
 
-    // ৩. টোকেন ভেরিফাই করা
+    // Token verify
     const secretKey = process.env.JWT_SECRET || "supersecretkey";
     const decoded = jwt.verify(token, secretKey);
 
-    // ৪. ডিকোড করা ইউজার ইনফো রিকোয়েস্ট অবজেক্টে জুড়ে দেওয়া, যাতে কন্ট্রোলার থেকে অ্যাক্সেস করা যায়
+    // user object for controller
     (req as any).user = decoded;
 
-    // ৫. পরবর্তী কাজ বা কন্ট্রোলারে যাওয়ার অনুমতি দেওয়া
     next();
   } catch (error) {
     return res.status(401).json({
