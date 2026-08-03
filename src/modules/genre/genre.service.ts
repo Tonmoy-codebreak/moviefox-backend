@@ -22,7 +22,26 @@ const getAllGenresFromDB = async () => {
   return result;
 };
 
+// Get Single Genre details from DB
+const getSingleGenreFromDB = async (id: string) => {
+  const result = await prisma.genre.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      media: {
+        include: {
+          media: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+
 export const GenreService = {
   createGenreIntoDB,
   getAllGenresFromDB,
+  getSingleGenreFromDB,
 };

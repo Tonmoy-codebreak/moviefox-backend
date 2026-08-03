@@ -5,7 +5,7 @@ import { GenreController } from "./genre.controller";
 
 const router: IRouter = Router();
 
-// Create Genre Route (with Zod validation middleware)
+// Create Genre Route
 router.post(
   "/",
   validateRequest(createGenreValidationSchema),
@@ -14,5 +14,8 @@ router.post(
 
 // Get All Genres Route
 router.get("/", GenreController.getAllGenres);
+
+// Get Single Genre details (including media that has the genre)
+router.get("/:id", GenreController.getSingleGenre);
 
 export default router;
