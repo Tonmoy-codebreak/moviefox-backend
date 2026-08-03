@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { ReviewService } from "./review.service";
 
+// Create Review (Controller)
 const createReview = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user?.id;
@@ -24,6 +25,28 @@ const createReview = async (req: Request, res: Response) => {
   }
 };
 
+// User delete Review (Controller)
+const deleteReview = async (req: Request, res: Response) => {
+  try {
+    const reviewId = req.params.id as string;
+    const user = (req as any).user; // authMiddleware থেকে আসা ইউজার
+
+    const result = await ReviewService.deleteReviewIntoDB(reviewId, user);
+
+    res.status(200).json({
+      success: true,
+      message: "Review deleted successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "Something went wrong!",
+    });
+  }
+};
+
 export const ReviewController = {
   createReview,
+  deleteReview,
 };

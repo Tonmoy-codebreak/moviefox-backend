@@ -46,7 +46,29 @@ const createReviewIntoDB = async (payload: IReviewPayload) => {
   return result;
 };
 
+// User delete Review
+const deleteReviewIntoDB = async (reviewId: string, userInfo: any) => {
+  const existingReview = await prisma.review.findUnique({
+    where: { id: reviewId },
+  });
+
+  if (!existingReview) {
+    throw new Error("Review not found!");
+  }
+
+  if (userInfo.role !== "ADMIN" && existingReview.userId !== userInfo.id) {
+    throw new Error("You are not authorized to delete this review!");
+  }
+
+  const deletedReview = await prisma.review.delete({
+    where: { id: reviewId },
+  });
+
+  return deletedReview;
+};
+
 // ================================================================
 export const ReviewService = {
   createReviewIntoDB,
+  deleteReviewIntoDB,
 };

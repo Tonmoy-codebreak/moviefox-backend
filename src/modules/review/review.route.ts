@@ -14,4 +14,11 @@ router.post(
   ReviewController.createReview,
 );
 
+// Review Deletion (User or Admin can delete a review in any status)
+router.delete(
+  "/:id",
+  authMiddleware("USER", "ADMIN"),
+  ReviewController.deleteReview,
+);
+
 export default router;
