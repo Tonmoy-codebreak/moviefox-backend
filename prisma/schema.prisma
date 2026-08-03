@@ -12,7 +12,7 @@ datasource db {
   provider = "postgresql"
 }
 
-
+// ==================== USER MODEL ====================
 model User {
   id        String   @id @default(uuid())
   name      String
@@ -22,13 +22,135 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations (পরে বাকি টেবিল অ্যাড করলে এখানে যুক্ত হবে)
-  // reviews   Review[]
-  // watchlist Watchlist[]
-  // completed CompletedMedia[]
+ // Relations
+  watchlists     Watchlist[]
+  completedMedia CompletedMedia[]
+  reviews        Review[]
+}
+ 
+// ==================== MEDIA MODEL ====================
+model Media {
+  id             String           @id @default(uuid())
+  title          String
+  slug           String           @unique
+  type           MediaType
+  access         MediaAccess      @default(FREE)
+  releaseYear    Int
+  posterUrl      String?
+  trailerUrl     String?
+  streamingUrl   String?
+  isPublished    Boolean          @default(false)
+  isFeatured     Boolean          @default(false)
+  avgRating      Float            @default(0.0)
+  ratingCount    Int              @default(0)
+  reviewCount    Int              @default(0)
+  deletedAt      DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  // Relations
+  genres         MediaGenre[]
+  watchlists     Watchlist[]
+  completedMedia CompletedMedia[]
+  reviews        Review[]
 }
 
+// ==================== Genre MODEL ====================
+model Genre {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  slug        String       @unique
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relations
+  media       MediaGenre[]
+}
+
+// ==================== Media Genre MODEL ====================
+model MediaGenre {
+  id          String   @id @default(uuid())
+  mediaId     String
+  media       Media    @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  genreId     String
+  genre       Genre    @relation(fields: [genreId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([mediaId, genreId])
+}
+
+
+// ==================== Watchlist MODEL ====================
+model Watchlist {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mediaId   String
+  media     Media    @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, mediaId])
+}
+
+
+// ==================== Completed Media MODEL ====================
+model CompletedMedia {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mediaId   String
+  media     Media    @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, mediaId])
+}
+
+
+// ==================== Review MODEL ====================
+model Review {
+  id          String        @id @default(uuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mediaId     String
+  media       Media         @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  rating      Int
+  content     String?
+  tags        String[]
+  hasSpoiler  Boolean       @default(false)
+  status      ReviewStatus  @default(PENDING)
+  isPublished Boolean       @default(false)
+  publishedAt DateTime?
+  deletedAt   DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+
+
+
+
+
+// ==================== Enums ====================================================
 enum UserRole {
   ADMIN
   USER
+}
+
+enum MediaType {
+  SERIES
+  MOVIE
+}
+
+enum MediaAccess {
+  FREE
+  PREMIUM
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
