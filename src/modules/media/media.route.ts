@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { createMedia } from "./media.controller";
+import { createMedia, getAllMedia } from "./media.controller";
 
 import { validateRequest } from "../../middlewares/validaterequest";
 import { createMediaValidationSchema } from "./media.validation";
@@ -9,10 +9,10 @@ const router: IRouter = Router();
 // Create a new media
 router.post("/", validateRequest(createMediaValidationSchema), createMedia);
 
-// Get all media (Browse/List)
-// router.get("/");
+// Get all media (including pagination, search, sorting condition)
+router.get("/", getAllMedia);
 
-// Get a single media by ID or Slug
+// Get a single media by ID
 // router.get("/:id");
 
 // Update a media
