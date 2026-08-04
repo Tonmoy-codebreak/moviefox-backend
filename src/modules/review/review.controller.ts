@@ -25,11 +25,11 @@ const createReview = async (req: Request, res: Response) => {
   }
 };
 
-// User delete Review (Controller)
+// Delete Review (Controller)
 const deleteReview = async (req: Request, res: Response) => {
   try {
     const reviewId = req.params.id as string;
-    const user = (req as any).user; // authMiddleware থেকে আসা ইউজার
+    const user = (req as any).user;
 
     const result = await ReviewService.deleteReviewIntoDB(reviewId, user);
 
