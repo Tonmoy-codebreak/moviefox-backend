@@ -4,6 +4,7 @@ import mediaRoutes from "./modules/media/media.route";
 import genreRoutes from "./modules/genre/genre.route";
 import reviewRoutes from "./modules/review/review.route";
 import completedMediaRoutes from "./modules/completedmedia/completedmedia.route";
+import watchlistRoutes from "./modules/watchlist/watchlist.route";
 
 const app: express.Application = express();
 
@@ -23,5 +24,8 @@ app.use("/api/v1/review", reviewRoutes);
 
 // Completed Media Routes
 app.use("/api/v1/completedmedia", completedMediaRoutes);
+
+// Watchlist Routes
+app.use("/api/v1/watchlist", watchlistRoutes);
 
 export default app;
