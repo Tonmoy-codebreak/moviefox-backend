@@ -15,8 +15,18 @@ router.post(
 );
 
 // Get logged-in user's watchlist
+router.get(
+  "/my-watchlist",
+  authMiddleware("USER", "ADMIN"),
+  WatchlistController.getMyWatchlist,
+);
 
 // Remove media from watchlist
+router.delete(
+  "/:id",
+  authMiddleware("USER", "ADMIN"),
+  WatchlistController.removeFromWatchlist,
+);
 
 // Get watchlist count for a specific media
 

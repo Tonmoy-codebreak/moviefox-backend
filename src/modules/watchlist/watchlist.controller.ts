@@ -23,6 +23,53 @@ const addToWatchlist = async (req: Request, res: Response) => {
   }
 };
 
+// Get logged-in user's watchlist (Controller)
+const getMyWatchlist = async (req: Request, res: Response) => {
+  try {
+    const user = (req as any).user;
+    const userId = user.id || user.userId;
+
+    const result = await WatchlistService.getMyWatchlistFromDB(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "Watchlist retrieved successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "Failed to retrieve watchlist",
+    });
+  }
+};
+
+// Remove media from watchlist (Controller)
+const removeFromWatchlist = async (req: Request, res: Response) => {
+  try {
+    const watchlistId = req.params.id as string;
+    const user = (req as any).user;
+
+    const result = await WatchlistService.removeFromWatchlistFromDB(
+      watchlistId,
+      user,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Media removed from watchlist successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "Failed to remove media from watchlist",
+    });
+  }
+};
+
 export const WatchlistController = {
   addToWatchlist,
+  getMyWatchlist,
+  removeFromWatchlist,
 };

@@ -44,6 +44,60 @@ const addToWatchlistIntoDB = async (userId: string, mediaId: string) => {
   return result;
 };
 
+// Get logged-in user's watchlist
+const getMyWatchlistFromDB = async (userId: string) => {
+  const watchlist = await prisma.watchlist.findMany({
+    where: { userId },
+    include: {
+      media: {
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          type: true,
+          access: true,
+          releaseYear: true,
+          posterUrl: true,
+          avgRating: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return watchlist;
+};
+
+// Remove media from watchlist
+const removeFromWatchlistFromDB = async (
+  watchlistId: string,
+  userInfo: any,
+) => {
+  const existingEntry = await prisma.watchlist.findUnique({
+    where: { id: watchlistId },
+  });
+
+  if (!existingEntry) {
+    throw new Error("Watchlist entry not found!");
+  }
+
+  const currentUserId = userInfo.id || userInfo.userId;
+
+  if (userInfo.role !== "ADMIN" && existingEntry.userId !== currentUserId) {
+    throw new Error("You are not authorized to remove this entry!");
+  }
+
+  const deletedEntry = await prisma.watchlist.delete({
+    where: { id: watchlistId },
+  });
+
+  return deletedEntry;
+};
+
 export const WatchlistService = {
   addToWatchlistIntoDB,
+  getMyWatchlistFromDB,
+  removeFromWatchlistFromDB,
 };
