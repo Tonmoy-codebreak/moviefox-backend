@@ -29,5 +29,6 @@ router.delete(
 );
 
 // Get watchlist count for a specific media
+router.get("/count/:mediaId", WatchlistController.getWatchlistCountByMediaId);
 
 export default router;

@@ -96,8 +96,30 @@ const removeFromWatchlistFromDB = async (
   return deletedEntry;
 };
 
+// Get watchlist count for a specific media
+const getWatchlistCountByMediaIdFromDB = async (mediaId: string) => {
+  const mediaExist = await prisma.media.findUnique({
+    where: { id: mediaId, deletedAt: null },
+    select: { id: true, title: true, slug: true },
+  });
+
+  if (!mediaExist) {
+    throw new Error("Media not found!");
+  }
+
+  const watchlistCount = await prisma.watchlist.count({
+    where: { mediaId },
+  });
+
+  return {
+    media: mediaExist,
+    watchlistCount,
+  };
+};
+
 export const WatchlistService = {
   addToWatchlistIntoDB,
   getMyWatchlistFromDB,
   removeFromWatchlistFromDB,
+  getWatchlistCountByMediaIdFromDB,
 };

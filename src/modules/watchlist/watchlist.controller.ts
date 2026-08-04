@@ -68,8 +68,30 @@ const removeFromWatchlist = async (req: Request, res: Response) => {
   }
 };
 
+// Get watchlist count for a specific media (Controller)
+const getWatchlistCountByMediaId = async (req: Request, res: Response) => {
+  try {
+    const mediaId = req.params.mediaId as string;
+
+    const result =
+      await WatchlistService.getWatchlistCountByMediaIdFromDB(mediaId);
+
+    res.status(200).json({
+      success: true,
+      message: "Watchlist count retrieved successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "Failed to retrieve watchlist count",
+    });
+  }
+};
+
 export const WatchlistController = {
   addToWatchlist,
   getMyWatchlist,
   removeFromWatchlist,
+  getWatchlistCountByMediaId,
 };
