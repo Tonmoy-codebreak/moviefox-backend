@@ -176,6 +176,28 @@ const approveReviewIntoDB = async (reviewId: string) => {
   return result;
 };
 
+// Get reviews created by the logged-in user
+const getMyReviewsFromDB = async (userId: string) => {
+  const reviews = await prisma.review.findMany({
+    where: { userId },
+    include: {
+      media: {
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          posterUrl: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return reviews;
+};
+
 // ================================================================
 export const ReviewService = {
   createReviewIntoDB,
@@ -183,4 +205,5 @@ export const ReviewService = {
   getReviewsByMediaIdFromDB,
   getPendingReviewsFromDB,
   approveReviewIntoDB,
+  getMyReviewsFromDB,
 };

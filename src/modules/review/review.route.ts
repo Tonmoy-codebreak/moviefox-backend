@@ -31,6 +31,12 @@ router.get("/pending", ReviewController.getPendingReviews);
 router.patch("/:id/approve", ReviewController.approveReview);
 
 // Get reviews created by the logged-in user
+router.get(
+  "/my-reviews",
+  authMiddleware("USER", "ADMIN"),
+  ReviewController.getMyReviews,
+);
+
 // Update a review
 
 export default router;
