@@ -118,7 +118,6 @@ model Review {
   media       Media         @relation(fields: [mediaId], references: [id], onDelete: Cascade)
   rating      Int
   content     String?
-  tags        String[]
   hasSpoiler  Boolean       @default(false)
   status      ReviewStatus  @default(PENDING)
   isPublished Boolean       @default(false)

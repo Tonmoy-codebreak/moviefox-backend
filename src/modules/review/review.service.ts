@@ -36,7 +36,6 @@ const createReviewIntoDB = async (payload: IReviewPayload) => {
       mediaId: payload.mediaId,
       rating: payload.rating,
       content: payload.content ?? null,
-      tags: payload.tags || [],
       hasSpoiler: payload.hasSpoiler || false,
       status: "PENDING",
       isPublished: false,
@@ -67,8 +66,60 @@ const deleteReviewIntoDB = async (reviewId: string, userInfo: any) => {
   return deletedReview;
 };
 
+// Get all reviews for specific media
+const getReviewsByMediaIdFromDB = async (mediaId: string) => {
+  const reviews = await prisma.review.findMany({
+    where: {
+      mediaId: mediaId,
+      status: "APPROVED",
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc", // লেটেস্ট রিভিউগুলো আগে দেখানোর জন্য
+    },
+  });
+
+  return reviews;
+};
+
+// Get all pending reviews
+const getPendingReviewsFromDB = async () => {
+  const result = await prisma.review.findMany({
+    where: {
+      status: "PENDING",
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      media: {
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+
 // ================================================================
 export const ReviewService = {
   createReviewIntoDB,
   deleteReviewIntoDB,
+  getReviewsByMediaIdFromDB,
+  getPendingReviewsFromDB,
 };

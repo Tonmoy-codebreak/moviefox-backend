@@ -14,11 +14,17 @@ router.post(
   ReviewController.createReview,
 );
 
-// Review Deletion (User or Admin can delete a review in any status)
+// Review Deletion (User and Admin only can delete)
 router.delete(
   "/:id",
   authMiddleware("USER", "ADMIN"),
   ReviewController.deleteReview,
 );
+
+// Get all reviews for a specific media
+router.get("/media/:mediaId", ReviewController.getReviewsByMediaId);
+
+// Get all pending Reviews (Admin only)
+router.get("/pending", ReviewController.getPendingReviews);
 
 export default router;

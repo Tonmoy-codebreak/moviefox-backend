@@ -4,7 +4,7 @@ import { ReviewService } from "./review.service";
 // Create Review (Controller)
 const createReview = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user?.id;
+    const userId = (req as any).user?.userId;
 
     const result = await ReviewService.createReviewIntoDB({
       userId,
@@ -46,7 +46,46 @@ const deleteReview = async (req: Request, res: Response) => {
   }
 };
 
+// Get all reviews for specific media (Controller)
+const getReviewsByMediaId = async (req: Request, res: Response) => {
+  try {
+    const mediaId = req.params.mediaId as string;
+    const result = await ReviewService.getReviewsByMediaIdFromDB(mediaId);
+
+    res.status(200).json({
+      success: true,
+      message: "Media reviews fetched successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "Something went wrong!",
+    });
+  }
+};
+
+// Get all pending reviews (Controller)
+const getPendingReviews = async (req: Request, res: Response) => {
+  try {
+    const result = await ReviewService.getPendingReviewsFromDB();
+
+    res.status(200).json({
+      success: true,
+      message: "Pending reviews retrieved successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Failed to retrieve pending reviews",
+    });
+  }
+};
+
 export const ReviewController = {
   createReview,
   deleteReview,
+  getReviewsByMediaId,
+  getPendingReviews,
 };

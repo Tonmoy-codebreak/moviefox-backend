@@ -20,6 +20,8 @@ export const authMiddleware = (...requiredRoles: string[]) => {
       const secretKey = process.env.JWT_SECRET || "supersecretkey";
       const decoded = jwt.verify(token, secretKey) as any;
 
+      console.log(decoded);
+
       // user object for controller
       (req as any).user = decoded;
 
