@@ -83,9 +83,29 @@ const getPendingReviews = async (req: Request, res: Response) => {
   }
 };
 
+// Approve a review by Admin (Controller)
+const approveReview = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id as string;
+    const result = await ReviewService.approveReviewIntoDB(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Review approved and published successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "Failed to approve review",
+    });
+  }
+};
+
 export const ReviewController = {
   createReview,
   deleteReview,
   getReviewsByMediaId,
   getPendingReviews,
+  approveReview,
 };

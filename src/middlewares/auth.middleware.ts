@@ -20,12 +20,9 @@ export const authMiddleware = (...requiredRoles: string[]) => {
       const secretKey = process.env.JWT_SECRET || "supersecretkey";
       const decoded = jwt.verify(token, secretKey) as any;
 
-      console.log(decoded);
-
       // user object for controller
       (req as any).user = decoded;
 
-      // রোল চেক করার লজিক (যদি রোল পাস করা হয়)
       if (requiredRoles.length > 0 && !requiredRoles.includes(decoded.role)) {
         return res.status(403).json({
           success: false,

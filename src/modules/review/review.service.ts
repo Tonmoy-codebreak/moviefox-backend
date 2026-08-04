@@ -116,10 +116,71 @@ const getPendingReviewsFromDB = async () => {
   return result;
 };
 
+// Approve a review by admin
+const approveReviewIntoDB = async (reviewId: string) => {
+  const reviewExist = await prisma.review.findUnique({
+    where: { id: reviewId },
+  });
+
+  if (!reviewExist) {
+    throw new Error("Review not found!");
+  }
+
+  if (reviewExist.status === "APPROVED") {
+    throw new Error("This review is already approved!");
+  }
+
+  //  (Review update + Media stats update)
+  const result = await prisma.$transaction(async (tx) => {
+    const updatedReview = await tx.review.update({
+      where: { id: reviewId },
+      data: {
+        status: "APPROVED",
+        isPublished: true,
+        publishedAt: new Date(),
+      },
+    });
+
+    const allApprovedReviews = await tx.review.findMany({
+      where: {
+        mediaId: reviewExist.mediaId,
+        status: "APPROVED",
+      },
+      select: {
+        rating: true,
+      },
+    });
+
+    const reviewCount = allApprovedReviews.length;
+    const ratingCount = reviewCount;
+
+    const totalRatingSum = allApprovedReviews.reduce(
+      (sum, rev) => sum + rev.rating,
+      0,
+    );
+    const avgRating =
+      reviewCount > 0 ? Number((totalRatingSum / reviewCount).toFixed(1)) : 0;
+
+    await tx.media.update({
+      where: { id: reviewExist.mediaId },
+      data: {
+        reviewCount,
+        ratingCount,
+        avgRating,
+      },
+    });
+
+    return updatedReview;
+  });
+
+  return result;
+};
+
 // ================================================================
 export const ReviewService = {
   createReviewIntoDB,
   deleteReviewIntoDB,
   getReviewsByMediaIdFromDB,
   getPendingReviewsFromDB,
+  approveReviewIntoDB,
 };

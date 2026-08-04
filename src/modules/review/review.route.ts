@@ -27,4 +27,10 @@ router.get("/media/:mediaId", ReviewController.getReviewsByMediaId);
 // Get all pending Reviews (Admin only)
 router.get("/pending", ReviewController.getPendingReviews);
 
+// Approve a review (Admin only)
+router.patch("/:id/approve", ReviewController.approveReview);
+
+// Get reviews created by the logged-in user
+// Update a review
+
 export default router;
