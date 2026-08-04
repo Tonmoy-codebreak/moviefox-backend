@@ -22,5 +22,16 @@ router.get(
 );
 
 // Remove media from completed list
+router.delete(
+  "/:id",
+  authMiddleware("USER", "ADMIN"),
+  CompletedMediaController.removeFromCompletedList,
+);
+
+// Completed Count per Media
+router.get(
+  "/count/:mediaId",
+  CompletedMediaController.getCompletedCountByMediaId,
+);
 
 export default router;
