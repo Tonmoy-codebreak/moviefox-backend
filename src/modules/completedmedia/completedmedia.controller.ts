@@ -26,6 +26,28 @@ const addToCompletedList = async (req: Request, res: Response) => {
   }
 };
 
+// whole completed list access by logged in user (Controller)
+const getMyCompletedList = async (req: Request, res: Response) => {
+  try {
+    const user = (req as any).user;
+    const userId = user.id || user.userId;
+
+    const result = await CompletedMediaService.getMyCompletedListFromDB(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "Completed media list retrieved successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "Failed to retrieve completed list",
+    });
+  }
+};
+
 export const CompletedMediaController = {
   addToCompletedList,
+  getMyCompletedList,
 };

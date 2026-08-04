@@ -14,7 +14,12 @@ router.post(
   CompletedMediaController.addToCompletedList,
 );
 
-// whole completed list access by logged in user
+// logged-in user's completed media list
+router.get(
+  "/my-list",
+  authMiddleware("USER", "ADMIN"),
+  CompletedMediaController.getMyCompletedList,
+);
 
 // Remove media from completed list
 

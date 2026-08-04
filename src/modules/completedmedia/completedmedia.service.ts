@@ -44,6 +44,33 @@ const addToCompletedListIntoDB = async (userId: string, mediaId: string) => {
   return result;
 };
 
+// whole completed list access by logged in user
+const getMyCompletedListFromDB = async (userId: string) => {
+  const completedList = await prisma.completedMedia.findMany({
+    where: { userId },
+    include: {
+      media: {
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          type: true,
+          access: true,
+          releaseYear: true,
+          posterUrl: true,
+          avgRating: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return completedList;
+};
+
 export const CompletedMediaService = {
   addToCompletedListIntoDB,
+  getMyCompletedListFromDB,
 };
