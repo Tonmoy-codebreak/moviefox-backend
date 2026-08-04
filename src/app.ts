@@ -3,6 +3,7 @@ import authRoutes from "./modules/auth/auth.route";
 import mediaRoutes from "./modules/media/media.route";
 import genreRoutes from "./modules/genre/genre.route";
 import reviewRoutes from "./modules/review/review.route";
+import completedMediaRoutes from "./modules/completedmedia/completedmedia.route";
 
 const app: express.Application = express();
 
@@ -19,5 +20,8 @@ app.use("/api/v1/genre", genreRoutes);
 
 // Review Routes
 app.use("/api/v1/review", reviewRoutes);
+
+// Completed Media Routes
+app.use("/api/v1/completedmedia", completedMediaRoutes);
 
 export default app;
