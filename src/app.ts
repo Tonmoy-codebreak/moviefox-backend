@@ -5,8 +5,15 @@ import genreRoutes from "./modules/genre/genre.route";
 import reviewRoutes from "./modules/review/review.route";
 import completedMediaRoutes from "./modules/completedmedia/completedmedia.route";
 import watchlistRoutes from "./modules/watchlist/watchlist.route";
-
+import cors from "cors";
 const app: express.Application = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
 
